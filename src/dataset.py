@@ -15,7 +15,6 @@ app = typer.Typer()
 
 
 def get_data(data_dir=RAW_DATA_DIR, batch_size=64):
-
     train_transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.RandomHorizontalFlip(),
@@ -30,7 +29,7 @@ def get_data(data_dir=RAW_DATA_DIR, batch_size=64):
                              std=[0.229, 0.224, 0.225])
     ])
 
-    transform = transforms.Compose([
+    val_test_transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.Grayscale(num_output_channels=3),
         transforms.ToTensor(),
@@ -38,29 +37,39 @@ def get_data(data_dir=RAW_DATA_DIR, batch_size=64):
                              std=[0.229, 0.224, 0.225])
     ])
 
-    """Downloads the FMNIST dataset and loads it into dataloaders"""
-    full_train_dataset = torchvision.datasets.FashionMNIST(
+    full_train_dataset_augmented = torchvision.datasets.FashionMNIST(
         root=data_dir,
         train=True,
         download=True,
-        transform=transform
+        transform=train_transform
+    )
+
+    full_train_dataset_clean = torchvision.datasets.FashionMNIST(
+        root=data_dir,
+        train=True,
+        download=True,
+        transform=val_test_transform
     )
 
     test_dataset = torchvision.datasets.FashionMNIST(
         root=data_dir,
         train=False,
         download=True,
-        transform=transform
+        transform=val_test_transform
     )
 
-    train_size = int(0.8 * len(full_train_dataset))  # 80% for training
-    val_size = len(full_train_dataset) - train_size  # 20% for validation
+    train_size = int(0.8 * len(full_train_dataset_augmented))
+    val_size = len(full_train_dataset_augmented) - train_size
 
-    train_dataset, val_dataset = random_split(
-        full_train_dataset,
+    generator = torch.Generator().manual_seed(42)
+    train_indices, val_indices = random_split(
+        range(len(full_train_dataset_augmented)),
         [train_size, val_size],
-        generator=torch.Generator().manual_seed(42)
+        generator=generator
     )
+
+    train_dataset = torch.utils.data.Subset(full_train_dataset_augmented, train_indices.indices)
+    val_dataset = torch.utils.data.Subset(full_train_dataset_clean, val_indices.indices)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
