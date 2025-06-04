@@ -1,10 +1,16 @@
-# fmnist_classification
+# Fashion-MNIST Classification
+
+A convolutional neural network implementation for classifying clothing items from the Fashion-MNIST dataset. Built with PyTorch to distinguish between 10 different clothing categories including t-shirts, pants, shoes, and accessories.
+
+## Dataset
+- 70,000 grayscale images (28x28 pixels)
+- 10 clothing categories
+- Training set: 60,000 images
+- Test set: 10,000 images
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
-
-CNN model for classifying Fashion-MNIST clothing items using PyTorch/TensorFlow
 
 ## Project Organization
 
