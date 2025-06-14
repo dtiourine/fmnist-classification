@@ -10,6 +10,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+from src.dataset import get_data
+from src.modeling.model import get_model
+from src.plots import plot_training_history
+
+import os
+
+from sklearn.metrics import accuracy_score
+
 app = typer.Typer()
 
 
@@ -82,21 +90,58 @@ def train_model(model, train_loader, val_loader, lr=0.001, num_epochs=10):
     return model, history
 
 
+def test_model(model, test_loader):
+    model.eval()
+
+    all_predictions = []
+    all_labels = []
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    with torch.no_grad():
+        for images, labels in test_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            outputs = model(images)
+            _, predictions = torch.max(outputs, 1)
+
+            all_predictions.extend(predictions.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
+
+    test_accuracy = accuracy_score(all_labels, all_predictions)
+    print(f"Test Accuracy: {test_accuracy:.4f} ({test_accuracy * 100:.2f}%)")
+
+
+def training_cycle(model_dir=MODELS_DIR):
+    train_loader, val_loader, test_loader = get_data()
+    model = get_model()
+
+    for param in model.parameters():
+        param.requires_grad = False
+
+    for param in model.classifier.parameters():
+        param.requires_grad = True
+
+    model, history1 = train_model(model, train_loader, val_loader, num_epochs=8, lr=0.001)
+
+    for param in model.parameters():
+        param.requires_grad = True
+
+    model, history2 = train_model(model, train_loader, val_loader, num_epochs=10, lr=0.0005)
+
+    plot_training_history(history1, history2)
+
+    torch.save(model, os.path.join(model_dir, "fashion_mnist_model.pth"))
+
+    test_model(model, test_loader)
+
+    return model
+
+
 @app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    features_path: Path = PROCESSED_DATA_DIR / "features.csv",
-    labels_path: Path = PROCESSED_DATA_DIR / "labels.csv",
-    model_path: Path = MODELS_DIR / "model.pkl",
-    # -----------------------------------------
-):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Training some model...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Modeling training complete.")
-    # -----------------------------------------
+def main(model_path: Path = MODELS_DIR):
+    training_cycle(model_dir=model_path)
 
 
 if __name__ == "__main__":

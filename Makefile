@@ -83,3 +83,12 @@ export PRINT_HELP_PYSCRIPT
 
 help:
 	@$(PYTHON_INTERPRETER) -c "${PRINT_HELP_PYSCRIPT}" < $(MAKEFILE_LIST)
+
+.PHONY: train
+
+train:
+	python -m src.modeling.train
+
+help:
+	@echo "Available commands:"
+	@echo "  make train    - Train the Fashion-MNIST model"
