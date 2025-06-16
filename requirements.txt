@@ -1,9 +1,9 @@
-black
-flake8
-isort
-loguru
-pip
-python-dotenv
-tqdm
-typer
--e .
+loguru==0.7.2
+matplotlib==3.10.3
+python-dotenv==1.1.0
+scikit_learn==1.7.0
+torch==2.3.1+cu121
+torch_summary==1.4.5
+torchvision==0.18.1+cu121
+tqdm==4.66.4
+typer==0.16.0
