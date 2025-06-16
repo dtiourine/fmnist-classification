@@ -81,14 +81,37 @@ print('\n'.join(['{:25}{}'.format(*reversed(match)) for match in matches]))
 endef
 export PRINT_HELP_PYSCRIPT
 
+BATCH_SIZE = 64
+STAGE1_EPOCHS = 8
+STAGE2_EPOCHS = 10
+MODEL_PATH = models
+
 help:
 	@$(PYTHON_INTERPRETER) -c "${PRINT_HELP_PYSCRIPT}" < $(MAKEFILE_LIST)
 
 .PHONY: train
 
 train:
-	python -m src.modeling.train
+	$(PYTHON_INTERPRETER) -m src.modeling.train \
+		--batch-size $(BATCH_SIZE) \
+		--stage1-epochs $(STAGE1_EPOCHS) \
+		--stage2-epochs $(STAGE2_EPOCHS)
+
 
 help:
 	@echo "Available commands:"
-	@echo "  make train    - Train the Fashion-MNIST model"
+	@echo ""
+	@echo "Training:"
+	@echo "  make train                    - Train the Fashion-MNIST model with default parameters"
+	@echo "  make train BATCH_SIZE=32      - Train with custom batch size"
+	@echo "  make train STAGE1_EPOCHS=5    - Train with custom stage 1 epochs"
+	@echo "  make train STAGE2_EPOCHS=15   - Train with custom stage 2 epochs"
+	@echo ""
+	@echo "Parameters:"
+	@echo "  BATCH_SIZE     = $(BATCH_SIZE)     (Training batch size)"
+	@echo "  STAGE1_EPOCHS  = $(STAGE1_EPOCHS)  (Epochs for stage 1 - classifier only)"
+	@echo "  STAGE2_EPOCHS  = $(STAGE2_EPOCHS)  (Epochs for stage 2 - fine-tuning)"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make train BATCH_SIZE=32 STAGE1_EPOCHS=5"
+	@echo "  make train STAGE2_EPOCHS=15"

@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "src"
 version = "0.0.1"
-description = "CNN model for classifying Fashion-MNIST clothing items using PyTorch/TensorFlow"
+description = "CNN model for classifying Fashion-MNIST clothing items using PyTorch"
 authors = [
   { name = "dtiourine" },
 ]
