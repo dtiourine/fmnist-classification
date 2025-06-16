@@ -1,51 +1,57 @@
 # Fashion-MNIST Classification
 
-A convolutional neural network implementation for classifying clothing items from the Fashion-MNIST dataset. Built with PyTorch to distinguish between 10 different clothing categories including t-shirts, pants, shoes, and accessories.
+<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
+    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
+</a>
+
+A deep learning project that classifies fashion items from the Fashion-MNIST dataset using transfer learning with a pre-trained EfficientNetB0 model. THe model can distinguish between 10 different clothing categories including t-shirts, pants, shoes, and accessories with 94% accuracy on the test set.
 
 <div align="center">
     <img src="https://datasets.activeloop.ai/wp-content/uploads/2022/09/Fashion-MNIST-dataset-Activeloop-Platform-visualization-image.webp" alt="Alt text" width="500">
 </div>
 
-## Dataset
-- 70,000 grayscale images (28x28 pixels)
-- 10 clothing categories
-- Training set: 60,000 images
-- Test set: 10,000 images
+## Quick Start
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/dtiourine/fmnist-classification.git
+cd fmnist-classification
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Training the Model
+
+The easiest way to train the model from scratch and see its performance on the train/val/test sets is using the Makefile commands:
+
+```bash
+# Train the model with default parameters
+make train
+
+# Train with custom parameters
+make train BATCH_SIZE=128 STAGE1_EPOCHS=5 STAGE2_EPOCHS=12
+```
 
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
+├── data               <- Data downloaded from source.
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+├── models             <- Trained and serialized models
 │
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+├── notebooks          <- Jupyter notebooks for experimentation and data exploration
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
 │                         src and configuration for tools like black
 │
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
+├── requirements.txt   <- The requirements file for reproducing the analysis environment
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
@@ -57,15 +63,20 @@ A convolutional neural network implementation for classifying clothing items fro
     │
     ├── dataset.py              <- Scripts to download or generate data
     │
-    ├── features.py             <- Code to create features for modeling
-    │
     ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
+    │   ├── __init__.py
+    │   ├── model.py            <- Code to get architecture of the model          
+    │   └── train.py            <- Code to train model from scratch and visualize performance on train/val/test sets
     │
     └── plots.py                <- Code to create visualizations
 ```
+
+## Results
+
+With default settings, you should expect:
+- **Training Accuracy**: ~97%
+- **Validation Accuracy**: ~94%
+- **Test Accuracy**: ~94%
 
 --------
 
