@@ -41,7 +41,7 @@ make train BATCH_SIZE=128 STAGE1_EPOCHS=5 STAGE2_EPOCHS=12
 
 ```
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+├── README.md          <- The top-level README 
 ├── data               <- Data downloaded from source.
 │
 ├── models             <- Trained and serialized models
