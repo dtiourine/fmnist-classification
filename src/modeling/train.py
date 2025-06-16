@@ -132,7 +132,7 @@ def training_cycle(model_dir=MODELS_DIR):
 
     plot_training_history(history1, history2)
 
-    torch.save(model, os.path.join(model_dir, "fashion_mnist_model.pth"))
+    torch.save(model, os.path.join(model_dir, "fashion_mnist_model_newly_trained.pth"))
 
     test_model(model, test_loader)
 
@@ -140,8 +140,22 @@ def training_cycle(model_dir=MODELS_DIR):
 
 
 @app.command()
-def main(model_path: Path = MODELS_DIR):
-    training_cycle(model_dir=model_path)
+def main(
+        model_path: Path = MODELS_DIR,
+        batch_size: int = typer.Option(64, "--batch-size", "-b", help="Training batch size"),
+        stage1_epochs: int = typer.Option(8, "--stage1-epochs", help="Epochs for stage 1 (classifier only)"),
+        stage2_epochs: int = typer.Option(10, "--stage2-epochs", help="Epochs for stage 2 (fine-tuning)"),
+):
+    """Train Fashion-MNIST classification model with EfficientNetB0"""
+    logger.info(f"Starting training with batch_size={batch_size}, "
+                f"stage1_epochs={stage1_epochs}, stage2_epochs={stage2_epochs}")
+
+    training_cycle(
+        model_dir=model_path,
+        batch_size=batch_size,
+        stage1_epochs=stage1_epochs,
+        stage2_epochs=stage2_epochs
+    )
 
 
 if __name__ == "__main__":
