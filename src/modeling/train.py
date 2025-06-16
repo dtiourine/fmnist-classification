@@ -113,8 +113,8 @@ def test_model(model, test_loader):
     print(f"Test Accuracy: {test_accuracy:.4f} ({test_accuracy * 100:.2f}%)")
 
 
-def training_cycle(model_dir=MODELS_DIR):
-    train_loader, val_loader, test_loader = get_data()
+def training_cycle(model_dir=MODELS_DIR, batch_size=64, stage1_epochs=8, stage2_epochs=10):
+    train_loader, val_loader, test_loader = get_data(batch_size=batch_size)
     model = get_model()
 
     for param in model.parameters():
@@ -123,12 +123,12 @@ def training_cycle(model_dir=MODELS_DIR):
     for param in model.classifier.parameters():
         param.requires_grad = True
 
-    model, history1 = train_model(model, train_loader, val_loader, num_epochs=8, lr=0.001)
+    model, history1 = train_model(model, train_loader, val_loader, num_epochs=stage1_epochs, lr=0.001)
 
     for param in model.parameters():
         param.requires_grad = True
 
-    model, history2 = train_model(model, train_loader, val_loader, num_epochs=10, lr=0.0005)
+    model, history2 = train_model(model, train_loader, val_loader, num_epochs=stage2_epochs, lr=0.0005)
 
     plot_training_history(history1, history2)
 
