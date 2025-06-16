@@ -2,6 +2,10 @@
 
 A convolutional neural network implementation for classifying clothing items from the Fashion-MNIST dataset. Built with PyTorch to distinguish between 10 different clothing categories including t-shirts, pants, shoes, and accessories.
 
+<div align="center">
+    <img src="https://datasets.activeloop.ai/wp-content/uploads/2022/09/Fashion-MNIST-dataset-Activeloop-Platform-visualization-image.webp" alt="Alt text" width="500">
+</div>
+
 ## Dataset
 - 70,000 grayscale images (28x28 pixels)
 - 10 clothing categories
